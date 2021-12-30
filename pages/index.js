@@ -1,5 +1,6 @@
 import styles from "../styles/Home.module.css";
 import SanityService from "../services/SanityService";
+import Header from "./components/Header";
 
 export default function Home({ home, posts }) {
   // console.log(home);
@@ -8,7 +9,7 @@ export default function Home({ home, posts }) {
   const otherPosts = posts.filter((p) => p.slug !== home.mainPostUrl);
   return (
     <div className={styles.container}>
-      <h1>Blog Home</h1>
+      <Header />
     </div>
   );
 }
