@@ -1,6 +1,8 @@
 import styles from "../styles/Home.module.css";
 import SanityService from "../services/SanityService";
 import Header from "./components/Header";
+import BlogHeadline from "./components/BlogHeadline";
+import BlogMainPost from "./components/BlogMainPost";
 
 export default function Home({ home, posts }) {
   // console.log(home);
@@ -10,6 +12,8 @@ export default function Home({ home, posts }) {
   return (
     <div className={styles.container}>
       <Header />
+      <BlogHeadline />
+      <BlogMainPost {...mainPost} />
     </div>
   );
 }
