@@ -20,7 +20,7 @@ export default function PostAll({ slug, post }) {
 export async function getStaticPaths() {
   const posts = await new SanityService().getPosts();
 
-  const paths = posts.map((post) => ({
+  const paths = posts?.map((post) => ({
     params: {
       slug: post.slug,
     },

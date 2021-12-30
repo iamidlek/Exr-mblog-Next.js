@@ -15,8 +15,8 @@ export default function Home({ home, posts }) {
     <div className={styles.container}>
       <Header />
       <BlogHeadline />
-      <BlogMainPost {...mainPost} />
-      <BlogList posts={otherPosts} />
+      {mainPost && <BlogMainPost {...mainPost} />}
+      {posts && <BlogList posts={otherPosts} />}
       <Footer />
     </div>
   );

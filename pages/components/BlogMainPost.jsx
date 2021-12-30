@@ -11,7 +11,12 @@ export default function BlogMainPost({
   createdAt,
 }) {
   return (
-    <Row align="middle" style={{ height: "auto" }}>
+    <Row
+      align="middle"
+      style={{
+        height: "auto",
+      }}
+    >
       <Col span={24}>
         <Link href={`/post/${slug}`}>
           <a>
@@ -22,7 +27,7 @@ export default function BlogMainPost({
               <h1>{title}</h1>
               <h3>{subtitle}</h3>
               <h4>
-                {author.name} - {dayjs(createdAt).format("MMMM D")}
+                {author.name} ∙ {dayjs(createdAt).format("MMMM D")}
               </h4>
             </Card>
           </a>
