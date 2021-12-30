@@ -1,6 +1,7 @@
 import sanityClient from "@sanity/client";
 
-export default function PostAll({ slug }) {
+export default function PostAll({ slug, post }) {
+  console.log(post);
   return (
     <div>
       <h1>Post : {slug}</h1>
@@ -55,9 +56,39 @@ export async function getStaticPaths() {
 
 // 요소(객체)에서 slug를 꺼낸다
 //! slug 라는 이름으로 동적 라우팅 되어있으므로 이름을 맞추어 주어야 한다
-export function getStaticProps({ params }) {
+export async function getStaticProps({ params }) {
   const { slug } = params;
+
+  const posts = await client.fetch(
+    `*[_type == 'post']{
+        title, 
+        subtitle, 
+        createdAt, 
+        'content': content[]{
+          ...,
+          ...select(_type == 'imageGallery' => {'images': images[]{..., 'url': asset -> url}})
+        },
+        'slug': slug.current,
+        'thumbnail': {
+          'alt': thumbnail.alt,
+          'imageUrl': thumbnail.asset -> url
+        },
+        'author': author -> {
+          name,
+          role,
+          'image': image.asset -> url
+        },
+        'tag': tag -> {
+          title,
+          'slug': slug.current
+        }
+      }`
+  );
+
+  const post = posts.find((p) => p.slug === slug);
+
   return {
     props: slug,
+    post,
   };
 }
