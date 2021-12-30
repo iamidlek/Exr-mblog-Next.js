@@ -1,4 +1,4 @@
-import sanityClient from "@sanity/client";
+import SanityService from "../../services/SanityService";
 
 export default function PostAll({ slug, post }) {
   console.log(post);
@@ -10,37 +10,7 @@ export default function PostAll({ slug, post }) {
 }
 
 export async function getStaticPaths() {
-  // sanity로 부터 데이터를 가지고 온다
-  const client = sanityClient({
-    dataset: "production",
-    projectId: "gvddgzfs",
-    useCdn: process.env.NODE_ENV === "production",
-  });
-  const posts = await client.fetch(
-    `*[_type == 'post']{
-        title, 
-        subtitle, 
-        createdAt, 
-        'content': content[]{
-          ...,
-          ...select(_type == 'imageGallery' => {'images': images[]{..., 'url': asset -> url}})
-        },
-        'slug': slug.current,
-        'thumbnail': {
-          'alt': thumbnail.alt,
-          'imageUrl': thumbnail.asset -> url
-        },
-        'author': author -> {
-          name,
-          role,
-          'image': image.asset -> url
-        },
-        'tag': tag -> {
-          title,
-          'slug': slug.current
-        }
-      }`
-  );
+  const posts = await new SanityService().getPosts();
 
   const paths = posts.map((post) => ({
     params: {
@@ -59,31 +29,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const { slug } = params;
 
-  const posts = await client.fetch(
-    `*[_type == 'post']{
-        title, 
-        subtitle, 
-        createdAt, 
-        'content': content[]{
-          ...,
-          ...select(_type == 'imageGallery' => {'images': images[]{..., 'url': asset -> url}})
-        },
-        'slug': slug.current,
-        'thumbnail': {
-          'alt': thumbnail.alt,
-          'imageUrl': thumbnail.asset -> url
-        },
-        'author': author -> {
-          name,
-          role,
-          'image': image.asset -> url
-        },
-        'tag': tag -> {
-          title,
-          'slug': slug.current
-        }
-      }`
-  );
+  const posts = await new SanityService().getPosts();
 
   const post = posts.find((p) => p.slug === slug);
 

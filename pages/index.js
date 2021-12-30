@@ -1,9 +1,11 @@
 import styles from "../styles/Home.module.css";
-import sanityClient from "@sanity/client";
+import SanityService from "../services/SanityService";
 
 export default function Home({ home, posts }) {
-  console.log(home);
-  console.log(posts);
+  // console.log(home);
+  // console.log(posts);
+  const mainPost = posts.find((p) => p.slug === home.mainPostUrl);
+  const otherPosts = posts.filter((p) => p.slug !== home.mainPostUrl);
   return (
     <div className={styles.container}>
       <h1>Blog Home</h1>
@@ -12,42 +14,9 @@ export default function Home({ home, posts }) {
 }
 
 export async function getStaticProps() {
-  // sanity로 부터 데이터를 가지고 온다
-  const client = sanityClient({
-    dataset: "production",
-    projectId: "gvddgzfs",
-    useCdn: process.env.NODE_ENV === "production",
-  });
-
-  const home = await client.fetch(
-    `*[_type == 'home'][0]{'mainPostUrl': mainPost -> slug.current}`
-  );
-
-  const posts = await client.fetch(
-    `*[_type == 'post']{
-      title, 
-      subtitle, 
-      createdAt, 
-      'content': content[]{
-        ...,
-        ...select(_type == 'imageGallery' => {'images': images[]{..., 'url': asset -> url}})
-      },
-      'slug': slug.current,
-      'thumbnail': {
-        'alt': thumbnail.alt,
-        'imageUrl': thumbnail.asset -> url
-      },
-      'author': author -> {
-        name,
-        role,
-        'image': image.asset -> url
-      },
-      'tag': tag -> {
-        title,
-        'slug': slug.current
-      }
-    }`
-  );
+  const sanityService = new SanityService();
+  const home = await sanityService.getHome();
+  const posts = await sanityService.getPosts();
 
   return {
     props: {
