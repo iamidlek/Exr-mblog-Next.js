@@ -1,5 +1,6 @@
 import { Card, Col, Row } from "antd";
 import Link from "next/link";
+import dayjs from "dayjs";
 
 export default function BlogMainPost({
   slug,
@@ -21,7 +22,7 @@ export default function BlogMainPost({
               <h1>{title}</h1>
               <h3>{subtitle}</h3>
               <h4>
-                {author.name} - {createdAt}
+                {author.name} - {dayjs(createdAt).format("MMMM D")}
               </h4>
             </Card>
           </a>
