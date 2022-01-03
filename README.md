@@ -36,6 +36,8 @@ export async function getStaticPaths() {
     // 요소 하나하나가 스테틱한 페이지가 됨
     paths,
     fallback: false,
+    // blocking 하면 요청대로 페이지 시도
+    // false 없으면 404
   };
 }
 ```
@@ -61,6 +63,7 @@ export async function getStaticProps({ params }) {
       slug,
       post,
     },
+    revalidate: 20, // 정적 페이지 다시 만들기 텀
   };
 }
 ```
